@@ -1,10 +1,16 @@
 import google.generativeai as genai
 import speech_recognition as sr
-import pyttsx3
 import sqlite3
 import requests
 from bs4 import BeautifulSoup
 import googlesearch
+from gtts import gTTS
+import os
+
+def speak(text):
+    tts = gTTS(text=text, lang="en")
+    tts.save("output.mp3")
+    os.system("mpg321 output.mp3")  # Play the audio
 
 # 🔑 Configure Gemini AI
 genai.configure(api_key="AIzaSyAo1KQiL-hOO1MfIKrdZmNgTZ6a6gWcNU4")
@@ -15,10 +21,6 @@ conn = sqlite3.connect("chat_history.db", check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS chat (id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT, message TEXT)")
 conn.commit()
-
-# 🎙️ Text-to-Speech
-engine = pyttsx3.init()
-engine.setProperty("rate", 150)
 
 # 🛑 Memory for Context
 chat_memory = []
